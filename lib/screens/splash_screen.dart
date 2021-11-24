@@ -6,15 +6,15 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFFf2b92b),
+        backgroundColor: Color(0xFFe3e5e9),
         body: Stack(children: [
           Align(
               alignment: Alignment.center,
               child: Container(
-                  height: 160,
-                  width: 160,
-                  color: Color(0xFFf2b92b),
-                  child: Image.asset('images/logo.png',))),
+                  height: double.infinity,
+                  width: double.infinity,
+                  color: Color(0xFFe3e5e9),
+                  child: Image.asset('images/logo.png',fit: BoxFit.fill,))),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

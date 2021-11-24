@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       position = 0;
       isLoading = false;
+      controller.scrollBy(0, 40);
     });
   }
 
@@ -145,8 +146,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> initPlatformState() async {
     //Remove this method to stop OneSignal Debugging
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.setAppId("15df0ec7-6e52-46d5-9753-87c67b787b6f");
 
-    OneSignal.shared.setAppId("af7ff7a0-06cb-4226-b402-f9c4473d76e9");
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
@@ -159,7 +160,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () async {
         _setloading(false);
         String url = await controller.currentUrl();
-        if (url == "https://linmart.co/") {
+        if (url == "https://www.thedreamcatchergift.com/") {
           return showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -211,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: MediaQuery.of(context).size.height,
                       child: WebView(
-                        initialUrl: 'https://linmart.co/',
+                        initialUrl: 'https://www.thedreamcatchergift.com/',
                         javascriptMode: JavascriptMode.unrestricted,
                         onWebViewCreated: (WebViewController wc) {
                           controller = wc;
