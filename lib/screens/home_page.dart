@@ -1,18 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:linmart/ad_manager.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 class HomePage extends StatefulWidget {
   @override
@@ -31,20 +23,10 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> attributes;
   var filePath;
   bool isLoading = false;
-  BannerAd banner;
 
 
-  String _debugLabelString = "";
-  String _emailAddress;
-  String _smsNumber;
-  String _externalUserId;
-  bool _enableConsentButton = false;
-
-  // CHANGE THIS parameter to true if you want to test GDPR privacy consent
-  bool _requireConsent = true;
-
-
-  doneLoading(String A) {
+  doneLoading(String A) async {
+    await Future.delayed(Duration(seconds: 3));
     setState(() {
       position = 0;
       isLoading = false;
@@ -52,42 +34,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final adState = Provider.of<AdManager>(context);
-  //   adState.initialization.then((status) {
-  //     setState(() {
-  //       banner = BannerAd(
-  //           size: AdSize.banner,
-  //           adUnitId: AdManager.bannerAdUnitId,
-  //           listener: AdManager().adListener,
-  //           request: AdRequest())
-  //         ..load();
-  //     });
-  //   });
-  // }
-
   startLoading(String A) {
     // productCheck();
     setState(() {
       position = 1;
       isLoading = true;
     });
-  }
 
-  // Future<void> productCheck() async {
-  //   String url = await controller.currentUrl();
-  //   if (url.contains('product')) {
-  //     setState(() {
-  //       isProduct = true;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       isProduct = false;
-  //     });
-  //   }
-  // }
+  }
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
@@ -146,7 +100,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> initPlatformState() async {
     //Remove this method to stop OneSignal Debugging
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setAppId("15df0ec7-6e52-46d5-9753-87c67b787b6f");
+    OneSignal.shared.setAppId("a16e971c-d691-46e9-bc66-b35e25522818");
 
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
@@ -160,7 +114,8 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () async {
         _setloading(false);
         String url = await controller.currentUrl();
-        if (url == "https://www.thedreamcatchergift.com/") {
+        print(url.toString());
+        if (url == "https://flattime.in/") {
           return showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -185,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(
                     'No',
-                    style: TextStyle(color: Color(0xFFf2b92b)),
+                    style: TextStyle(color: Color(0xFFf29d12)),
                   ),
                 ),
                 FlatButton(
@@ -193,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                   /*Navigator.of(context).pop(true)*/
                   child: Text(
                     'Yes',
-                    style: TextStyle(color: Color(0xFFf2b92b)),
+                    style: TextStyle(color: Color(0xFFf29d12)),
                   ),
                 ),
               ],
@@ -212,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: MediaQuery.of(context).size.height,
                       child: WebView(
-                        initialUrl: 'https://www.thedreamcatchergift.com/',
+                        initialUrl: 'https://flattime.in',
                         javascriptMode: JavascriptMode.unrestricted,
                         onWebViewCreated: (WebViewController wc) {
                           controller = wc;
@@ -220,33 +175,51 @@ class _HomePageState extends State<HomePage> {
                         key: key,
                         onPageFinished: doneLoading,
                         onPageStarted: startLoading,
-                        gestureRecognizers: Set()
-                          ..add(Factory<VerticalDragGestureRecognizer>(
-                              () => VerticalDragGestureRecognizer()
-                                ..onDown = (DragDownDetails dragDownDetails) {
-                                  controller.getScrollY().then((value) {
-                                    if (value == 0 &&
-                                        dragDownDetails
-                                                .globalPosition.direction <
-                                            1) {
-                                      controller.reload();
-                                    }
-                                  });
-                                })),
                         gestureNavigationEnabled: true,
                       ),
                     ),
                     isLoading
-                        ? Center(
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child:CupertinoActivityIndicator(animating: true,)
-                              // CircularProgressIndicator(
-                              //   valueColor:
-                              //       AlwaysStoppedAnimation<Color>(Color(0xf2b92b)),
-                              // ),
-                            ),
-                          )
+                        ?
+                        Container(
+                          color: Color(0xFF595959),
+                          height: MediaQuery.of(context).size.height,
+                            child: Stack(children: [
+                              Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      color: Color(0xFF595959),
+                                      child: Image.asset('images/logo.png',fit: BoxFit.fill,))),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 40),
+                                    child: Container(
+                                        height: 100,
+                                        color: Color(0xFF595959),
+                                        child: Image.asset('images/title.png',fit: BoxFit.fill,))
+                                  // CircleAvatar(
+                                  //   backgroundColor: Colors.white,
+                                  //   child: CircularProgressIndicator(
+                                  //     valueColor:
+                                  //     AlwaysStoppedAnimation<Color>(Colors.pink),
+                                  //   ),
+                                  // ),
+                                ),
+                              )
+                            ])
+                        )
+                    // Center(
+                    //         child: CircleAvatar(
+                    //           backgroundColor: Colors.white,
+                    //           child:CupertinoActivityIndicator(animating: true,)
+                    //           // CircularProgressIndicator(
+                    //           //   valueColor:
+                    //           //       AlwaysStoppedAnimation<Color>(Color(0xf2b92b)),
+                    //           // ),
+                    //         ),
+                    //       )
                         : Container(),
                   ])
                 : Center(
@@ -265,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Text(
                           'No internet connection \n Please check your internet settings',
-                          style: TextStyle(color: Color(0xFFf2b92b)),
+                          style: TextStyle(color: Color(0xFFf29d12)),
                           textAlign: TextAlign.center,
                         ),
                       ],

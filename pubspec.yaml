@@ -1,4 +1,4 @@
-name: linmart
+name: flattime
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+2
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -24,14 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
   webview_flutter:
-  flutter_spinkit:
   connectivity:
   data_connection_checker:
-  pull_to_refresh:
-  google_mobile_ads:
-  provider:
   onesignal_flutter: ^3.2.3
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -41,6 +36,11 @@ dev_dependencies:
     sdk: flutter
   flutter_native_splash:
   flutter_launcher_icons:
+flutter_native_splash:
+  image: images/logo.png
+  color: 595959
+  android: true
+  ios: true
 flutter_icons:
   android: true
   ios: true
@@ -59,10 +59,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/logo.png
-    - images/facebook.png
-    - images/instagram.png
-    - images/logoappbar.png
+    - images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

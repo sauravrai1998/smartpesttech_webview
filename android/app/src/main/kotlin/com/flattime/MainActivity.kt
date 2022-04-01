@@ -1,4 +1,4 @@
-package com.thedreamcatchergift
+package com.flattime
 
 import io.flutter.embedding.android.FlutterActivity
 
