@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                       height: MediaQuery.of(context).size.height,
                       child: WebView(
                         initialUrl: 'https://flattime.in/',
-                        // javascriptMode: JavascriptMode.unrestricted,
+                        javascriptMode: JavascriptMode.unrestricted,
                         onWebViewCreated: (WebViewController wc) {
                           controller = wc;
                         },
