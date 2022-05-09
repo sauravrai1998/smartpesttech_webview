@@ -142,13 +142,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_webview_pro:
-    dependency: "direct main"
-    description:
-      name: flutter_webview_pro
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1+2"
   image:
     dependency: transitive
     description:
@@ -266,6 +259,62 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.0"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.16"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.15"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.6"
+  url_launcher_windows:
+    dependency: transitive
+    description:
+      name: url_launcher_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   vector_math:
     dependency: transitive
     description:
@@ -301,27 +350,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.7.2"
-  webview_pro_android:
-    dependency: transitive
-    description:
-      name: webview_pro_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.8.3+2"
-  webview_pro_platform_interface:
-    dependency: transitive
-    description:
-      name: webview_pro_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.8.1+2"
-  webview_pro_wkwebview:
-    dependency: transitive
-    description:
-      name: webview_pro_wkwebview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.7.1+1"
   xml:
     dependency: transitive
     description:
@@ -338,4 +366,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
-  flutter: ">=2.5.0"
+  flutter: ">=2.8.0"

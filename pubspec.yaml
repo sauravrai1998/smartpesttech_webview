@@ -1,4 +1,4 @@
-name: flattime
+name: smartpesttech
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -27,7 +27,7 @@ dependencies:
   connectivity:
   data_connection_checker:
   onesignal_flutter: ^3.2.3
-  flutter_webview_pro: ^3.0.1+2
+  url_launcher:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -38,8 +38,8 @@ dev_dependencies:
   flutter_native_splash:
   flutter_launcher_icons:
 flutter_native_splash:
-  image: images/logo.png
-  color: 595959
+  image: images/icon.png
+  color: 8b0000
   android: true
   ios: true
 flutter_icons:

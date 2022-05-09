@@ -1,4 +1,4 @@
-package com.flattime
+package com.smartpesttech
 
 import io.flutter.embedding.android.FlutterActivity
 

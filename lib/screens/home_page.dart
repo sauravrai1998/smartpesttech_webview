@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:smartpesttech/widgets/exit_alert_dialog.dart';
+import 'package:smartpesttech/widgets/no_internet_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
 import 'package:flutter/cupertino.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../constants.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,34 +18,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   WebViewController controller;
-  num position = 1;
   final key = UniqueKey();
-  var internet = false;
-  bool loadBottomNavBar = false;
-  List<Map<String, dynamic>> imageUrl;
-  List<Map<String, dynamic>> description;
-  bool isProduct = false;
-  List<Map<String, dynamic>> attributes;
-  var filePath;
   bool isLoading = false;
-
 
   doneLoading(String A) async {
     await Future.delayed(Duration(seconds: 3));
     setState(() {
-      position = 0;
       isLoading = false;
-      controller.scrollBy(0, 40);
     });
   }
 
   startLoading(String A) {
-    // productCheck();
     setState(() {
-      position = 1;
       isLoading = true;
     });
-
   }
 
   String _connectionStatus = 'Unknown';
@@ -58,19 +45,21 @@ class _HomePageState extends State<HomePage> {
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initPlatformState();
-    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
+    OneSignal.shared.setNotificationWillShowInForegroundHandler(
+        (OSNotificationReceivedEvent event) {
       // Will be called whenever a notification is received in foreground
       // Display Notification, pass null param for not displaying the notification
       event.complete(event.notification);
     });
 
-    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       // Will be called whenever a notification is opened/button pressed.
     });
 
-    // if (Platform.isAndroid) {
-    //   WebView.platform = SurfaceAndroidWebView();
-    // }
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+    }
   }
 
   @override
@@ -108,14 +97,27 @@ class _HomePageState extends State<HomePage> {
   Future<void> initPlatformState() async {
     //Remove this method to stop OneSignal Debugging
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setAppId("a16e971c-d691-46e9-bc66-b35e25522818");
-
+    OneSignal.shared.setAppId("05029169-ae8f-446b-b3f4-3175f1bd840e");
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
       print("Accepted permission: $accepted");
     });
   }
+
+  Future<void> _launch(url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(
+        Uri.parse(
+          url,
+        ),
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -123,44 +125,10 @@ class _HomePageState extends State<HomePage> {
         _setloading(false);
         String url = await controller.currentUrl();
         print(url.toString());
-        if (url == "https://flattime.in/") {
+        if (url == "https://www.smartpesttech.com/") {
           return showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Row(
-                children: [
-                  Container(
-                    child: Image.asset(
-                      'images/logo.png',
-                      height: 35,
-                      width: 35,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Are you sure?'),
-                ],
-              ),
-              content: Text('Do you want to exit an App'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(
-                    'No',
-                    style: TextStyle(color: primaryColor),
-                  ),
-                ),
-                FlatButton(
-                  onPressed: () => exit(0),
-                  /*Navigator.of(context).pop(true)*/
-                  child: Text(
-                    'Yes',
-                    style: TextStyle(color: primaryColor),
-                  ),
-                ),
-              ],
-            ),
+            builder: (context) => ExitAlertDialog(),
           );
         } else {
           controller.goBack();
@@ -175,8 +143,13 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: MediaQuery.of(context).size.height,
                       child: WebView(
-                        initialUrl: 'https://flattime.in/',
+                        initialUrl: 'https://www.smartpesttech.com/',
                         javascriptMode: JavascriptMode.unrestricted,
+                        userAgent: Platform.isIOS
+                            ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15' +
+                                ' (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1'
+                            : 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) ' +
+                                'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36',
                         onWebViewCreated: (WebViewController wc) {
                           controller = wc;
                         },
@@ -184,50 +157,34 @@ class _HomePageState extends State<HomePage> {
                         onPageFinished: doneLoading,
                         onPageStarted: startLoading,
                         gestureNavigationEnabled: true,
+                        navigationDelegate: (NavigationRequest request) {
+                          print(request.url);
+                          if (request.url.contains("whatsapp.com") ||
+                              request.url.contains("tel:") ||
+                              request.url.contains("join") ||
+                              request.url.contains("play.google.com") ||
+                              request.url.contains("www.facebook.com") ||
+                              request.url.contains("www.instagram.com") ||
+                              request.url.contains("linkedin.com") ||
+                              request.url.contains("m.youtube.com") ||
+                              request.url.contains("facebook.com") ||
+                              request.url.contains(
+                                  "https://users.wix.com/wix-sm/api/oauth2/")) {
+                            String url = request.url;
+                            print(request.url);
+                            _launch(url);
+                            return NavigationDecision.prevent;
+                          }
+                          return NavigationDecision.navigate;
+                        },
                       ),
                     ),
-                    isLoading
-                        ?
-                        Container(
-                          color: darkBackground,
-                          height: MediaQuery.of(context).size.height,
-                            child: Stack(children: [
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                      height: 150,
-                                      width: 150,
-                                      color: darkBackground,
-                                      child: Image.asset('images/logo.png',fit: BoxFit.fill,))),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 40),
-                                    child: Container(
-                                        height: 100,
-                                        color: darkBackground,
-                                        child: Image.asset('images/title.png',fit: BoxFit.fill,))
-                                ),
-                              )
-                            ])
-                        )
-                        : Container(),
+                    // isLoading
+                    //     ?
+                    //     LoadingWidget()
+                    //     : Container(),
                   ])
-                : Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [CupertinoActivityIndicator(animating: true,),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'No internet connection \n Please check your internet settings',
-                          style: TextStyle(color: primaryColor),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
+                : NoInternetWidget(),
           ]),
         ),
       ),
@@ -239,7 +196,8 @@ class _HomePageState extends State<HomePage> {
       isLoading = uploading;
     });
   }
-    Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     print(result.toString());
     switch (result) {
       case ConnectivityResult.wifi:
