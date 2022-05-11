@@ -11,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../constants.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -125,7 +127,7 @@ class _HomePageState extends State<HomePage> {
         _setloading(false);
         String url = await controller.currentUrl();
         print(url.toString());
-        if (url == "https://www.smartpesttech.com/") {
+        if (url == baseUrl) {
           return showDialog(
             context: context,
             builder: (context) => ExitAlertDialog(),
@@ -143,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: MediaQuery.of(context).size.height,
                       child: WebView(
-                        initialUrl: 'https://www.smartpesttech.com/',
+                        initialUrl: baseUrl,
                         javascriptMode: JavascriptMode.unrestricted,
                         userAgent: Platform.isIOS
                             ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15' +
