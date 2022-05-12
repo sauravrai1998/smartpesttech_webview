@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
+import 'package:elhumass/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smartpesttech/widgets/exit_alert_dialog.dart';
-import 'package:smartpesttech/widgets/no_internet_widget.dart';
+import 'package:elhumass/widgets/exit_alert_dialog.dart';
+import 'package:elhumass/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   WebViewController controller;
   final key = UniqueKey();
   bool isLoading = false;
+  bool showFlag = false;
 
   doneLoading(String A) async {
     await Future.delayed(Duration(seconds: 3));
@@ -30,8 +32,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  startLoading(String A) {
+  startLoading(String A) async {
+    String url = await controller.currentUrl();
     setState(() {
+      if(url.contains("http://www.elhumass.com/new/my-account/")) {
+          showFlag = true;
+      }
+      else {
+        showFlag = false;
+      }
       isLoading = true;
     });
   }
@@ -99,7 +108,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> initPlatformState() async {
     //Remove this method to stop OneSignal Debugging
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setAppId("05029169-ae8f-446b-b3f4-3175f1bd840e");
+    OneSignal.shared.setAppId(oneSignalAppId);
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
@@ -139,6 +148,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Stack(children: [
             _connectionStatus != 'Failed to get connectivity.'
                 ? Stack(children: [
@@ -170,8 +180,7 @@ class _HomePageState extends State<HomePage> {
                               request.url.contains("linkedin.com") ||
                               request.url.contains("m.youtube.com") ||
                               request.url.contains("facebook.com") ||
-                              request.url.contains(
-                                  "https://users.wix.com/wix-sm/api/oauth2/")) {
+                              request.url.contains("mobile.twitter.com/")) {
                             String url = request.url;
                             print(request.url);
                             _launch(url);
@@ -181,10 +190,40 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
-                    // isLoading
-                    //     ?
-                    //     LoadingWidget()
-                    //     : Container(),
+                    if(showFlag)
+                    Positioned(
+                      right: 0,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                controller.loadUrl("http://www.elhumass.com/new/blog/");
+                              },
+                              child: Image.asset(
+                                'images/kuwait-flag.png',
+                                height: 35,
+                                width: 35,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                controller.loadUrl("http://www.elhumass.com/new/%d8%aa%d8%b3%d8%ac%d9%8a%d9%84-%d9%81%d8%b1%d8%af-2/#");
+                              },
+                              child: Image.asset(
+                                'images/egypt-flag.png',
+                                height: 35,
+                                width: 35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    isLoading
+                        ?
+                        LoadingWidget()
+                        : Container(),
                   ])
                 : NoInternetWidget(),
           ]),

@@ -25,11 +25,11 @@ class NoInternetWidget extends StatelessWidget {
           ),
           CupertinoActivityIndicator(animating: true,),
           SizedBox(
-            height: 10,
+            height: 25,
           ),
           Text(
             'No internet connection \n Please check your internet settings',
-            style: TextStyle(color: primaryColor,fontWeight: FontWeight.w500),
+            style: TextStyle(color: noInternetTextColor,fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
         ],

@@ -1,6 +1,6 @@
 
-import 'package:smartpesttech/screens/home_page.dart';
-import 'package:smartpesttech/screens/splash_screen.dart';
+import 'package:elhumass/screens/home_page.dart';
+import 'package:elhumass/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
