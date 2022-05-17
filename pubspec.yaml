@@ -39,7 +39,7 @@ dev_dependencies:
   flutter_launcher_icons:
 flutter_native_splash:
   image: images/icon.png
-  color: FFFFFF
+  color: ddac2e
   android: true
   ios: true
 flutter_icons:
