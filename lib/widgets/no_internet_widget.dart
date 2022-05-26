@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../constants.dart';
 class NoInternetWidget extends StatelessWidget {
   const NoInternetWidget({
@@ -23,7 +24,8 @@ class NoInternetWidget extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          CupertinoActivityIndicator(animating: true,),
+          SpinKitDoubleBounce(color: primaryColor,size: 20,),
+          // CupertinoActivityIndicator(animating: true,),
           SizedBox(
             height: 25,
           ),

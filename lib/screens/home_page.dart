@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:elhumass/widgets/loading_widget.dart';
+import 'package:freex/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:elhumass/widgets/exit_alert_dialog.dart';
-import 'package:elhumass/widgets/no_internet_widget.dart';
+import 'package:freex/widgets/exit_alert_dialog.dart';
+import 'package:freex/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,8 +23,6 @@ class _HomePageState extends State<HomePage> {
   WebViewController controller;
   final key = UniqueKey();
   bool isLoading = false;
-  bool showFlag = false;
-
   doneLoading(String A) async {
     await Future.delayed(Duration(seconds: 3));
     setState(() {
@@ -35,12 +33,6 @@ class _HomePageState extends State<HomePage> {
   startLoading(String A) async {
     String url = await controller.currentUrl();
     setState(() {
-      if(url.contains("http://www.elhumass.com/new/my-account/")) {
-          showFlag = true;
-      }
-      else {
-        showFlag = false;
-      }
       isLoading = true;
     });
   }
@@ -148,7 +140,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
           body: Stack(children: [
             _connectionStatus != 'Failed to get connectivity.'
                 ? Stack(children: [
@@ -173,6 +165,7 @@ class _HomePageState extends State<HomePage> {
                           print(request.url);
                           if (request.url.contains("whatsapp.com") ||
                               request.url.contains("tel:") ||
+                              request.url.contains("mailto:") ||
                               request.url.contains("join") ||
                               request.url.contains("play.google.com") ||
                               request.url.contains("www.facebook.com") ||
@@ -188,36 +181,6 @@ class _HomePageState extends State<HomePage> {
                           }
                           return NavigationDecision.navigate;
                         },
-                      ),
-                    ),
-                    if(showFlag)
-                    Positioned(
-                      right: 0,
-                      child: Container(
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                controller.loadUrl("http://www.elhumass.com/new/blog/");
-                              },
-                              child: Image.asset(
-                                'images/kuwait-flag.png',
-                                height: 35,
-                                width: 35,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                controller.loadUrl("http://www.elhumass.com/new/%d8%aa%d8%b3%d8%ac%d9%8a%d9%84-%d9%81%d8%b1%d8%af-2/#");
-                              },
-                              child: Image.asset(
-                                'images/egypt-flag.png',
-                                height: 35,
-                                width: 35,
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                     isLoading

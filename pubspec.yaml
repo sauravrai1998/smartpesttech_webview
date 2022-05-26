@@ -1,4 +1,4 @@
-name: elhumass
+name: freex
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -28,6 +28,7 @@ dependencies:
   data_connection_checker:
   onesignal_flutter: ^3.2.3
   url_launcher:
+  flutter_spinkit:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -39,7 +40,7 @@ dev_dependencies:
   flutter_launcher_icons:
 flutter_native_splash:
   image: images/icon.png
-  color: ddac2e
+  color: 000000
   android: true
   ios: true
 flutter_icons:
