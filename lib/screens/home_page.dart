@@ -183,6 +183,9 @@ class _HomePageState extends State<HomePage> {
                         gestureNavigationEnabled: true,
                         navigationDelegate: (NavigationRequest request) async {
                           print(request.url);
+                          setState(() {
+                            isPdfOpen = false;
+                          });
                           if (request.url.contains("whatsapp.com") ||
                               request.url.contains("tel:") ||
                               request.url.contains("mailto:") ||
