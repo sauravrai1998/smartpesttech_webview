@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
+import 'package:freex/screens/pdf_view_page.dart';
 import 'package:freex/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,10 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:http/http.dart' as http;
 import '../constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   WebViewController controller;
   final key = UniqueKey();
   bool isLoading = false;
+  bool isPdfOpen = false;
   doneLoading(String A) async {
     await Future.delayed(Duration(seconds: 3));
     setState(() {
@@ -34,12 +39,27 @@ class _HomePageState extends State<HomePage> {
     String url = await controller.currentUrl();
     setState(() {
       isLoading = true;
+      isPdfOpen = false;
     });
   }
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  Future<String> getFileFromUrl(String url) async {
+    try {
+      var data = await http.get(Uri.parse(url));
+      var bytes = data.bodyBytes;
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/mypdfonline.pdf");
+
+      File urlFile = await file.writeAsBytes(bytes);
+      return urlFile.path;
+    } catch (e) {
+      throw Exception("Error opening url file");
+    }
+  }
 
   @override
   void initState() {
@@ -161,11 +181,12 @@ class _HomePageState extends State<HomePage> {
                         onPageFinished: doneLoading,
                         onPageStarted: startLoading,
                         gestureNavigationEnabled: true,
-                        navigationDelegate: (NavigationRequest request) {
+                        navigationDelegate: (NavigationRequest request) async {
                           print(request.url);
                           if (request.url.contains("whatsapp.com") ||
                               request.url.contains("tel:") ||
                               request.url.contains("mailto:") ||
+                              request.url.contains("geo:") ||
                               request.url.contains("join") ||
                               request.url.contains("play.google.com") ||
                               request.url.contains("www.facebook.com") ||
@@ -178,15 +199,27 @@ class _HomePageState extends State<HomePage> {
                             print(request.url);
                             _launch(url);
                             return NavigationDecision.prevent;
+                          } else if (request.url.contains(".pdf")) {
+                            var path = await getFileFromUrl(request.url);
+                            if (path != null && !isPdfOpen) {
+                              print('naviagte');
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PdfViewPage(
+                                            path: path,
+                                          ))).then((value) => setState(() {
+                                    isPdfOpen = true;
+                                  }));
+                            }
+                            return NavigationDecision.prevent;
                           }
                           return NavigationDecision.navigate;
                         },
                       ),
                     ),
-                    isLoading
-                        ?
-                        LoadingWidget()
-                        : Container(),
+                    isLoading ? LoadingWidget() : Container(),
                   ])
                 : NoInternetWidget(),
           ]),
