@@ -1,4 +1,4 @@
-name: freex
+name: racingwins
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -42,8 +42,8 @@ dev_dependencies:
   flutter_native_splash:
   flutter_launcher_icons:
 flutter_native_splash:
-  image: images/icon.png
-  color: 000000
+  image: images/splash.png
+  color: a1783e
   android: true
   ios: true
 flutter_icons:

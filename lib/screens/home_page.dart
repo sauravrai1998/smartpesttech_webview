@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:freex/screens/pdf_view_page.dart';
-import 'package:freex/widgets/loading_widget.dart';
+import 'package:racingwins/screens/pdf_view_page.dart';
+import 'package:racingwins/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:freex/widgets/exit_alert_dialog.dart';
-import 'package:freex/widgets/no_internet_widget.dart';
+import 'package:racingwins/widgets/exit_alert_dialog.dart';
+import 'package:racingwins/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -201,6 +201,7 @@ class _HomePageState extends State<HomePage> {
                             String url = request.url;
                             print(request.url);
                             _launch(url);
+                            controller.loadUrl(baseUrl);
                             return NavigationDecision.prevent;
                           } else if (request.url.contains(".pdf")) {
                             var path = await getFileFromUrl(request.url);

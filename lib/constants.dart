@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 
-const String baseUrl = 'https://freex.cz/';
-const String oneSignalAppId = "1d3d0518-8ec4-4b7e-93ba-dce06b978419";
-Color primaryColor = Color(0xFF00ffa8);
+const String baseUrl = 'https://racingwins.app/';
+const String oneSignalAppId = "e0aa5fbc-04fe-4167-ab58-92c2abe27352";
+Color primaryColor = Color(0xFFa1783e);
 Color darkBackground = Color(0xFF595959);
-Color noInternetTextColor = Color(0xFF00ffa8);
+Color noInternetTextColor = Color(0xFFa1783e);
 
