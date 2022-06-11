@@ -1,4 +1,4 @@
-package com.racingwins
+package com.boomking
 
 import io.flutter.embedding.android.FlutterActivity
 

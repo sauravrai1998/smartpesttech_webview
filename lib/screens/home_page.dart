@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:racingwins/screens/pdf_view_page.dart';
-import 'package:racingwins/widgets/loading_widget.dart';
+import 'package:boomking/screens/pdf_view_page.dart';
+import 'package:boomking/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:racingwins/widgets/exit_alert_dialog.dart';
-import 'package:racingwins/widgets/no_internet_widget.dart';
+import 'package:boomking/widgets/exit_alert_dialog.dart';
+import 'package:boomking/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
