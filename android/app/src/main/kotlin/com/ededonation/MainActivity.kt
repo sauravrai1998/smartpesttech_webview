@@ -1,4 +1,4 @@
-package com.boomking
+package com.ededonation
 
 import io.flutter.embedding.android.FlutterActivity
 

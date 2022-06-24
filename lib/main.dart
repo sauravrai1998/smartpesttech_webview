@@ -1,6 +1,6 @@
 
-import 'package:boomking/screens/home_page.dart';
-import 'package:boomking/screens/splash_screen.dart';
+import 'package:ededonation/screens/home_page.dart';
+import 'package:ededonation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

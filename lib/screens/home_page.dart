@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:boomking/screens/pdf_view_page.dart';
-import 'package:boomking/widgets/loading_widget.dart';
+import 'package:ededonation/screens/pdf_view_page.dart';
+import 'package:ededonation/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:boomking/widgets/exit_alert_dialog.dart';
-import 'package:boomking/widgets/no_internet_widget.dart';
+import 'package:ededonation/widgets/exit_alert_dialog.dart';
+import 'package:ededonation/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   WebViewController controller;
+  int selectedBottomBarIndex = 0;
   final key = UniqueKey();
   bool isLoading = false;
   bool isPdfOpen = false;
@@ -148,7 +149,11 @@ class _HomePageState extends State<HomePage> {
         _setloading(false);
         String url = await controller.currentUrl();
         print(url.toString());
-        if (url == baseUrl) {
+        if ((url == baseUrl && selectedBottomBarIndex == 0) ||
+            (url == baseUrl1 && selectedBottomBarIndex == 1) ||
+            (url == baseUrl2 && selectedBottomBarIndex == 2) ||
+            (url == baseUrl3 && selectedBottomBarIndex == 3) ||
+            (url == baseUrl4 && selectedBottomBarIndex == 4)) {
           return showDialog(
             context: context,
             builder: (context) => ExitAlertDialog(),
@@ -160,7 +165,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           body: Stack(children: [
             _connectionStatus != 'Failed to get connectivity.'
                 ? Stack(children: [
@@ -227,9 +232,55 @@ class _HomePageState extends State<HomePage> {
                   ])
                 : NoInternetWidget(),
           ]),
+          bottomNavigationBar: buildBottomNavigationBar(),
         ),
       ),
     );
+  }
+
+  BottomNavigationBar buildBottomNavigationBar() {
+    return BottomNavigationBar(
+          currentIndex: selectedBottomBarIndex,
+          selectedItemColor: primaryColor,
+          unselectedItemColor: Colors.grey,
+          onTap: (int index) {
+            setState(() {
+              if (selectedBottomBarIndex != index) {
+                switch (index) {
+                  case 0:
+                    controller.loadUrl(baseUrl);
+                    break;
+                  case 1:
+                    controller.loadUrl(baseUrl1);
+                    break;
+                  case 2:
+                    controller.loadUrl(baseUrl2);
+                    break;
+                  case 3:
+                    controller.loadUrl(baseUrl3);
+                    break;
+                  case 4:
+                    controller.loadUrl(baseUrl4);
+                    break;
+                }
+              } else {
+                controller.scrollTo(0, 0);
+              }
+              selectedBottomBarIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.volunteer_activism_outlined),
+                label: 'Donation'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.add), label: 'Fund Raise'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle_outlined), label: 'Account'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home')
+          ],
+        );
   }
 
   void _setloading(bool uploading) {
