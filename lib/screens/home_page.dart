@@ -142,6 +142,45 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+
+  Widget buildAppBar (WebViewController controller) {
+    return selectedBottomBarIndex == 3 ? Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+            onTap: () {
+              print('ontap');
+              controller.loadUrl(baseUrl3);
+            },
+            child: Text('Recieved',style: TextStyle(color: primaryColor),)),
+        SizedBox(width: 15,),
+        GestureDetector(
+            onTap: () {
+              controller.loadUrl(baseUrl5);
+            },
+            child: Text('My Donation',style: TextStyle(color: primaryColor))),
+      ],
+    ) : appBarList[selectedBottomBarIndex];
+  }
+
+  List<Widget> appBarList = [
+    Text('Home',style: TextStyle(color: primaryColor),),
+    Text('Donation',style: TextStyle(color: primaryColor),),
+    Text('Fund Raise',style: TextStyle(color: primaryColor),),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+            onTap: () {
+            },
+            child: Text('Recieved',style: TextStyle(color: primaryColor),)),
+        SizedBox(width: 15,),
+        Text('My Donation',style: TextStyle(color: primaryColor)),
+      ],
+    ),
+    Text('Account',style: TextStyle(color: primaryColor),),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -232,10 +271,62 @@ class _HomePageState extends State<HomePage> {
                   ])
                 : NoInternetWidget(),
           ]),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            title: buildAppBar(controller),
+            leading: Builder(
+              builder: (context) {
+                return IconButton(icon: Icon(Icons.arrow_back,color: Colors.grey,), onPressed: () async {
+                  String url = await controller.currentUrl();
+                  print(url.toString());
+                  if ((url == baseUrl && selectedBottomBarIndex == 0) ||
+                      (url == baseUrl1 && selectedBottomBarIndex == 1) ||
+                      (url == baseUrl2 && selectedBottomBarIndex == 2) ||
+                      (url == baseUrl3 && selectedBottomBarIndex == 3) ||
+                      (url == baseUrl4 && selectedBottomBarIndex == 4)) {} else {
+                    controller.goBack();
+                  }
+                },);
+              }
+            ),
+            actions: <Widget>[
+              if(selectedBottomBarIndex == 4)
+              PopupMenuButton<String>(
+                icon: Icon(Icons.menu,color: Colors.grey,),
+                onSelected: handleClick,
+                itemBuilder: (BuildContext context) {
+                  return {'About us', 'Contact us', 'How it works', 'Privacy policy'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(choice),
+                    );
+                  }).toList();
+                },
+              ),
+            ],
+          ),
           bottomNavigationBar: buildBottomNavigationBar(),
         ),
       ),
     );
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'About us':
+        controller.loadUrl('https://ededonation.com/about/');
+        break;
+      case 'Contact us':
+        controller.loadUrl('https://ededonation.com/contact/');
+        break;
+      case 'How it works':
+        controller.loadUrl('https://ededonation.com/how-it-works/');
+        break;
+      case 'Privacy policy':
+        controller.loadUrl('https://ededonation.com/?page_id=3&preview=true');
+        break;
+    }
   }
 
   BottomNavigationBar buildBottomNavigationBar() {
@@ -276,9 +367,9 @@ class _HomePageState extends State<HomePage> {
                 label: 'Donation'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.add), label: 'Fund Raise'),
+            BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: 'Notification'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle_outlined), label: 'Account'),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home')
           ],
         );
   }
