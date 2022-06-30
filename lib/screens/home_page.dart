@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   final key = UniqueKey();
   bool isLoading = false;
   bool isPdfOpen = false;
+  String currentUrl = '';
   doneLoading(String A) async {
     await Future.delayed(Duration(seconds: 3));
     setState(() {
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
   startLoading(String A) async {
     String url = await controller.currentUrl();
     setState(() {
+      currentUrl = url;
       isLoading = true;
       isPdfOpen = false;
     });
@@ -147,18 +149,18 @@ class _HomePageState extends State<HomePage> {
     return selectedBottomBarIndex == 3 ? Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        GestureDetector(
+        InkWell(
             onTap: () {
               print('ontap');
               controller.loadUrl(baseUrl3);
             },
-            child: Text('Recieved',style: TextStyle(color: primaryColor),)),
+            child: Text('Recieved',style: TextStyle(color: currentUrl == baseUrl3 ? primaryColor : primaryColor.withOpacity(0.5)),)),
         SizedBox(width: 15,),
-        GestureDetector(
+        InkWell(
             onTap: () {
               controller.loadUrl(baseUrl5);
             },
-            child: Text('My Donation',style: TextStyle(color: primaryColor))),
+            child: Text('My Donation',style: TextStyle(color: currentUrl == baseUrl5 ? primaryColor : primaryColor.withOpacity(0.5)))),
       ],
     ) : appBarList[selectedBottomBarIndex];
   }
@@ -277,17 +279,25 @@ class _HomePageState extends State<HomePage> {
             title: buildAppBar(controller),
             leading: Builder(
               builder: (context) {
-                return IconButton(icon: Icon(Icons.arrow_back,color: Colors.grey,), onPressed: () async {
-                  String url = await controller.currentUrl();
-                  print(url.toString());
-                  if ((url == baseUrl && selectedBottomBarIndex == 0) ||
-                      (url == baseUrl1 && selectedBottomBarIndex == 1) ||
-                      (url == baseUrl2 && selectedBottomBarIndex == 2) ||
-                      (url == baseUrl3 && selectedBottomBarIndex == 3) ||
-                      (url == baseUrl4 && selectedBottomBarIndex == 4)) {} else {
-                    controller.goBack();
-                  }
-                },);
+                if ((currentUrl == baseUrl && selectedBottomBarIndex == 0) ||
+                    (currentUrl == baseUrl1 && selectedBottomBarIndex == 1) ||
+                    (currentUrl == baseUrl2 && selectedBottomBarIndex == 2) ||
+                    (currentUrl == baseUrl3 && selectedBottomBarIndex == 3) ||
+                    (currentUrl == baseUrl4 && selectedBottomBarIndex == 4)) {
+                return Container();}
+                else {
+                  return IconButton(icon: Icon(Icons.arrow_back,color: Colors.grey,), onPressed: () async {
+                    String url = await controller.currentUrl();
+                    print(url.toString());
+                    if ((url == baseUrl && selectedBottomBarIndex == 0) ||
+                        (url == baseUrl1 && selectedBottomBarIndex == 1) ||
+                        (url == baseUrl2 && selectedBottomBarIndex == 2) ||
+                        (url == baseUrl3 && selectedBottomBarIndex == 3) ||
+                        (url == baseUrl4 && selectedBottomBarIndex == 4)) {} else {
+                      controller.goBack();
+                    }
+                  },);;
+                }
               }
             ),
             actions: <Widget>[
@@ -315,16 +325,16 @@ class _HomePageState extends State<HomePage> {
   void handleClick(String value) {
     switch (value) {
       case 'About us':
-        controller.loadUrl('https://ededonation.com/about/');
+        controller.loadUrl('https://ededonation.com/about-us-for-app/');
         break;
       case 'Contact us':
-        controller.loadUrl('https://ededonation.com/contact/');
+        controller.loadUrl('https://ededonation.com/contact-for-app/');
         break;
       case 'How it works':
-        controller.loadUrl('https://ededonation.com/how-it-works/');
+        controller.loadUrl('https://ededonation.com/how-it-works-for-app/');
         break;
       case 'Privacy policy':
-        controller.loadUrl('https://ededonation.com/?page_id=3&preview=true');
+        controller.loadUrl('https://ededonation.com/privacy-policy-a/');
         break;
     }
   }
@@ -334,9 +344,15 @@ class _HomePageState extends State<HomePage> {
           currentIndex: selectedBottomBarIndex,
           selectedItemColor: primaryColor,
           unselectedItemColor: Colors.grey,
-          onTap: (int index) {
+          onTap: (int index) async{
+            String url = await controller.currentUrl();
             setState(() {
-              if (selectedBottomBarIndex != index) {
+              if (selectedBottomBarIndex != index ||
+                  (url != baseUrl && selectedBottomBarIndex == 0) ||
+              (url != baseUrl1 && selectedBottomBarIndex == 1) ||
+              (url != baseUrl2 && selectedBottomBarIndex == 2) ||
+              (url != baseUrl3 && selectedBottomBarIndex == 3) ||
+              (url != baseUrl4 && selectedBottomBarIndex == 4)) {
                 switch (index) {
                   case 0:
                     controller.loadUrl(baseUrl);
@@ -366,7 +382,7 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.volunteer_activism_outlined),
                 label: 'Donation'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.add), label: 'Fund Raise'),
+                icon: Icon(Icons.add), label: 'Fundraise'),
             BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: 'Notification'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle_outlined), label: 'Account'),

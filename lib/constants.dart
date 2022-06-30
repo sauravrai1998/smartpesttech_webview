@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 
 const String baseUrl = 'https://ededonation.com/home-page/';
-const String baseUrl1 = 'https://ededonation.com/donate-page-for-app/';
+const String baseUrl1 = 'https://ededonation.com/donate-2/';
 const String baseUrl2 = 'https://ededonation.com/cf-campaign-form-for-app/';
 const String baseUrl3= 'https://ededonation.com/cf-dashboard/?page_type=pledges_received';
 const String baseUrl4 = 'https://ededonation.com/my-account/?login=true&back=home&page=1';
