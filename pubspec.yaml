@@ -1,4 +1,4 @@
-name: boomking
+name: almandourtv
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -40,10 +40,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_native_splash:
+    ## flutter pub run flutter_native_splash:create
   flutter_launcher_icons:
+    ## flutter pub run flutter_launcher_icons:main
 flutter_native_splash:
   image: images/splash.png
-  color: 000000
+  color: 1F4D78
   android: true
   ios: true
 flutter_icons:

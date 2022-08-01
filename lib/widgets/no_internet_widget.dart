@@ -24,7 +24,7 @@ class NoInternetWidget extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          SpinKitDoubleBounce(color: primaryColor,size: 20,),
+          SpinKitDoubleBounce(color: noInternetTextColor,size: 20,),
           // CupertinoActivityIndicator(animating: true,),
           SizedBox(
             height: 25,

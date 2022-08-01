@@ -1,4 +1,4 @@
-package com.boomking
+package com.almandourtv
 
 import io.flutter.embedding.android.FlutterActivity
 

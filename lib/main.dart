@@ -1,6 +1,6 @@
 
-import 'package:boomking/screens/home_page.dart';
-import 'package:boomking/screens/splash_screen.dart';
+import 'package:almandourtv/screens/home_page.dart';
+import 'package:almandourtv/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

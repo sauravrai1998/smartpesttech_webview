@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:boomking/screens/pdf_view_page.dart';
-import 'package:boomking/widgets/loading_widget.dart';
+import 'package:almandourtv/screens/pdf_view_page.dart';
+import 'package:almandourtv/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:boomking/widgets/exit_alert_dialog.dart';
-import 'package:boomking/widgets/no_internet_widget.dart';
+import 'package:almandourtv/widgets/exit_alert_dialog.dart';
+import 'package:almandourtv/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: primaryBackground,
           body: Stack(children: [
             _connectionStatus != 'Failed to get connectivity.'
                 ? Stack(children: [
