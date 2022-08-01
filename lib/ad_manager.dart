@@ -35,10 +35,10 @@
 //
 //   static String get bannerAdUnitId {
 //     final String testAd = 'ca-app-pub-3940256099942544/6300978111';
-//     final String clientAd = 'ca-app-pub-6679538919687389/8961499331';
+//     final String clientAd = 'ca-app-pub-2794435023110821/8346542428';
 //     final String myAd = 'ca-app-pub-2825223105842229/8827804794';
 //     if (Platform.isAndroid) {
-//       return testAd;
+//       return clientAd;
 //     } else if (Platform.isIOS) {
 //       return "<YOUR_IOS_BANNER_AD_UNIT_ID>";
 //     } else {

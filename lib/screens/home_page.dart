@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mensagemdacruz/screens/pdf_view_page.dart';
 import 'package:mensagemdacruz/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mensagemdacruz/widgets/exit_alert_dialog.dart';
 import 'package:mensagemdacruz/widgets/no_internet_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
+import '../ad_manager.dart';
 import '../constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,6 +31,25 @@ class _HomePageState extends State<HomePage> {
   final key = UniqueKey();
   bool isLoading = false;
   bool isPdfOpen = false;
+  //
+  // BannerAd banner;
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final adState = Provider.of<AdManager>(context);
+  //   adState.initialization.then((status) {
+  //     setState(() {
+  //       banner = BannerAd(
+  //           size: AdSize.banner,
+  //           adUnitId: AdManager.bannerAdUnitId,
+  //           listener: AdManager().adListener,
+  //           request: AdRequest())
+  //         ..load();
+  //     });
+  //   });
+  // }
+
   doneLoading(String A) async {
     await Future.delayed(Duration(seconds: 3));
     setState(() {
@@ -223,6 +245,24 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+                    //Ad Container
+                    // Positioned(
+                    //   bottom: 0,
+                    //   child: banner == null
+                    //       ? Container(
+                    //           height: 50,
+                    //           width: 50,
+                    //           color: Colors.transparent,
+                    //         )
+                    //       : Container(
+                    //           color: Colors.transparent,
+                    //           height: 50,
+                    //           width: MediaQuery.of(context).size.width,
+                    //           child: AdWidget(
+                    //             ad: banner,
+                    //           ),
+                    //         ),
+                    // ),
                     isLoading ? LoadingWidget() : Container(),
                   ])
                 : NoInternetWidget(),
