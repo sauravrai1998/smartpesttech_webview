@@ -23,15 +23,15 @@ class ExitAlertDialog extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          Text('Are you sure?'),
+          Text('هل أنت واثق؟'),
         ],
       ),
-      content: Text('Do you want to exit an App'),
+      content: Text('هل تريد الخروج من التطبيق'),
       actions: <Widget>[
         FlatButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(
-            'No',
+            'رقم',
             style: TextStyle(color: primaryColor),
           ),
         ),
@@ -39,7 +39,7 @@ class ExitAlertDialog extends StatelessWidget {
           onPressed: () => exit(0),
           /*Navigator.of(context).pop(true)*/
           child: Text(
-            'Yes',
+            'نعم',
             style: TextStyle(color: primaryColor),
           ),
         ),
