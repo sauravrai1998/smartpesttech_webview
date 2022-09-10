@@ -1,4 +1,4 @@
-package com.almandourtv
+package com.craftrox
 
 import io.flutter.embedding.android.FlutterActivity
 

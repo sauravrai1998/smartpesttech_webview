@@ -1,4 +1,4 @@
-name: almandourtv
+name: craftrox
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -45,7 +45,7 @@ dev_dependencies:
     ## flutter pub run flutter_launcher_icons:main
 flutter_native_splash:
   image: images/splash.png
-  color: 1F4D78
+  color: 111111
   android: true
   ios: true
 flutter_icons:

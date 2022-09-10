@@ -1,6 +1,6 @@
 
-import 'package:almandourtv/screens/home_page.dart';
-import 'package:almandourtv/screens/splash_screen.dart';
+import 'package:craftrox/screens/home_page.dart';
+import 'package:craftrox/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => Splash(),
+        '/': (context) => HomePage(),
       },
       debugShowCheckedModeBanner: false,
       color: Color(0xFF0D0D0E),

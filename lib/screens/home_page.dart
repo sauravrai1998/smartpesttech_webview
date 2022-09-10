@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:almandourtv/screens/pdf_view_page.dart';
-import 'package:almandourtv/widgets/loading_widget.dart';
+import 'package:craftrox/screens/pdf_view_page.dart';
+import 'package:craftrox/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:almandourtv/widgets/exit_alert_dialog.dart';
-import 'package:almandourtv/widgets/no_internet_widget.dart';
+import 'package:craftrox/widgets/exit_alert_dialog.dart';
+import 'package:craftrox/widgets/no_internet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
