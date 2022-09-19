@@ -223,7 +223,9 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
-                    isLoading ? LoadingWidget() : Container(),
+                    //
+                    //Uncomment these lines to show loader
+                    // isLoading ? LoadingWidget() : Container(),
                   ])
                 : NoInternetWidget(),
           ]),
