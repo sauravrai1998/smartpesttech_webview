@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:mensagemdacruz/screens/pdf_view_page.dart';
-import 'package:mensagemdacruz/widgets/loading_widget.dart';
+import 'package:ubi/screens/pdf_view_page.dart';
+import 'package:ubi/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mensagemdacruz/widgets/exit_alert_dialog.dart';
-import 'package:mensagemdacruz/widgets/no_internet_widget.dart';
+import 'package:ubi/widgets/exit_alert_dialog.dart';
+import 'package:ubi/widgets/no_internet_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -141,6 +142,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> initPlatformState() async {
     //Remove this method to stop OneSignal Debugging
+
+    await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
+
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
     OneSignal.shared.setAppId(oneSignalAppId);
 
@@ -161,6 +165,24 @@ class _HomePageState extends State<HomePage> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<void> requestDownload(String _url, String _name) async {
+    final dir =
+    await getApplicationDocumentsDirectory();
+//From path_provider package
+    var _localPath = dir.path + _name;
+    final savedDir = Directory(_localPath);
+    await savedDir.create(recursive: true).then((value) async {
+      String _taskid = await FlutterDownloader.enqueue(
+        url: _url,
+        fileName: _name,
+        savedDir: _localPath,
+        showNotification: true,
+        openFileFromNotification: false,
+      );
+      print(_taskid);
+    });
   }
 
   @override
@@ -188,7 +210,8 @@ class _HomePageState extends State<HomePage> {
                 ? Stack(children: [
                     Container(
                       height: MediaQuery.of(context).size.height,
-                      child: WebView(
+                      child:
+                      WebView(
                         initialUrl: baseUrl,
                         javascriptMode: JavascriptMode.unrestricted,
                         userAgent: Platform.isIOS
@@ -225,7 +248,12 @@ class _HomePageState extends State<HomePage> {
                             _launch(url);
                             controller.loadUrl(baseUrl);
                             return NavigationDecision.prevent;
-                          } else if (request.url.contains(".pdf")) {
+                          }
+                          else if (request.url.contains("download")) {
+                            requestDownload(request.url, "file");
+                            return NavigationDecision.prevent;
+                          }
+                          else if (request.url.contains(".pdf")) {
                             var path = await getFileFromUrl(request.url);
                             if (path != null && !isPdfOpen) {
                               print('naviagte');

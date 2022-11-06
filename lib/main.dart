@@ -1,7 +1,7 @@
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:mensagemdacruz/screens/home_page.dart';
-import 'package:mensagemdacruz/screens/splash_screen.dart';
+import 'package:ubi/screens/home_page.dart';
+import 'package:ubi/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'ad_manager.dart';

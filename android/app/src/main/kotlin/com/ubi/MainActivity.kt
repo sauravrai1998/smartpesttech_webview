@@ -1,4 +1,4 @@
-package com.mensagemdacruz
+package com.ubi.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
