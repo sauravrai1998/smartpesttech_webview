@@ -29,10 +29,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => Splash(),
+        '/': (context) => HomePage(),
       },
       debugShowCheckedModeBanner: false,
-      color: Color(0xFF0D0D0E),
+      color: Color(0xFFFFFFFF),
     );
   }
 }

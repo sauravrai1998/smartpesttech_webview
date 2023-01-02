@@ -11,12 +11,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+// import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,7 +25,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  WebViewController controller;
+  // WebViewController controller;
+
+  final GlobalKey webViewKey = GlobalKey();
+  InAppWebViewController webViewController;
+  InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+      crossPlatform: InAppWebViewOptions(
+          useShouldOverrideUrlLoading: true,
+          mediaPlaybackRequiresUserGesture: false,
+          useOnDownloadStart: true),
+      android: AndroidInAppWebViewOptions(
+        useHybridComposition: true,
+      ),
+      ios: IOSInAppWebViewOptions(
+        allowsInlineMediaPlayback: true,
+      ));
+
+  PullToRefreshController pullToRefreshController;
+  ContextMenu contextMenu;
+  String url = "";
+  double progress = 0;
+  final urlController = TextEditingController();
+
   final key = UniqueKey();
   bool isLoading = false;
   bool isPdfOpen = false;
@@ -36,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   startLoading(String A) async {
-    String url = await controller.currentUrl();
+    // String url = await controller.currentUrl();
     setState(() {
       isLoading = true;
       isPdfOpen = false;
@@ -80,9 +102,53 @@ class _HomePageState extends State<HomePage> {
       // Will be called whenever a notification is opened/button pressed.
     });
 
-    if (Platform.isAndroid) {
-      WebView.platform = SurfaceAndroidWebView();
-    }
+    // if (Platform.isAndroid) {
+    //   WebView.platform = SurfaceAndroidWebView();
+    // }
+    contextMenu = ContextMenu(
+        menuItems: [
+          ContextMenuItem(
+              androidId: 1,
+              iosId: "1",
+              title: "Special",
+              action: () async {
+                print("Menu item Special clicked!");
+                print(await webViewController?.getSelectedText());
+                await webViewController?.clearFocus();
+              })
+        ],
+        options: ContextMenuOptions(hideDefaultSystemContextMenuItems: false),
+        onCreateContextMenu: (hitTestResult) async {
+          print("onCreateContextMenu");
+          print(hitTestResult.extra);
+          print(await webViewController?.getSelectedText());
+        },
+        onHideContextMenu: () {
+          print("onHideContextMenu");
+        },
+        onContextMenuActionItemClicked: (contextMenuItemClicked) async {
+          var id = (Platform.isAndroid)
+              ? contextMenuItemClicked.androidId
+              : contextMenuItemClicked.iosId;
+          print("onContextMenuActionItemClicked: " +
+              id.toString() +
+              " " +
+              contextMenuItemClicked.title);
+        });
+
+    pullToRefreshController = PullToRefreshController(
+      options: PullToRefreshOptions(
+        color: Colors.blue,
+      ),
+      onRefresh: () async {
+        if (Platform.isAndroid) {
+          webViewController?.reload();
+        } else if (Platform.isIOS) {
+          webViewController?.loadUrl(
+              urlRequest: URLRequest(url: await webViewController?.getUrl()));
+        }
+      },
+    );
   }
 
   @override
@@ -110,12 +176,12 @@ class _HomePageState extends State<HomePage> {
     return _updateConnectionStatus(result);
   }
 
-  Future _refreshData() async {
-    await Future.delayed(Duration(seconds: 3));
-    setState(() {
-      controller.reload();
-    });
-  }
+  // Future _refreshData() async {
+  //   await Future.delayed(Duration(seconds: 3));
+  //   setState(() {
+  //     controller.reload();
+  //   });
+  // }
 
   Future<void> initPlatformState() async {
     //Remove this method to stop OneSignal Debugging
@@ -141,20 +207,39 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<bool> redirectTo() async {
+    showDialog(
+      context: context,
+      builder: (context) => ExitAlertDialog(),
+    );
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        // _setloading(false);
+        // String url = await controller.currentUrl();
+        // print(url.toString());
+        // if (url == baseUrl) {
+        //   return showDialog(
+        //     context: context,
+        //     builder: (context) => ExitAlertDialog(),
+        //   );
+        // } else {
+        //   controller.goBack();
+        //   return false;
+        // }
+        print('back pressed');
         _setloading(false);
-        String url = await controller.currentUrl();
+        print(url);
         print(url.toString());
         if (url == baseUrl) {
-          return showDialog(
-            context: context,
-            builder: (context) => ExitAlertDialog(),
-          );
+          print(url);
+          return redirectTo();
         } else {
-          controller.goBack();
+          webViewController?.goBack();
           return false;
         }
       },
@@ -166,60 +251,87 @@ class _HomePageState extends State<HomePage> {
                 ? Stack(children: [
                     Container(
                       height: MediaQuery.of(context).size.height,
-                      child: WebView(
-                        initialUrl: baseUrl,
-                        javascriptMode: JavascriptMode.unrestricted,
-                        userAgent: Platform.isIOS
-                            ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15' +
-                                ' (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1'
-                            : 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) ' +
-                                'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36',
-                        onWebViewCreated: (WebViewController wc) {
-                          controller = wc;
+                      child: InAppWebView(
+                        key: webViewKey,
+                        initialUrlRequest:
+                        URLRequest(url: Uri.parse(baseUrl)),
+                        initialOptions: options,
+                        onWebViewCreated: (InAppWebViewController controller) {
+                          webViewController = controller;
                         },
-                        key: key,
-                        onPageFinished: doneLoading,
-                        onPageStarted: startLoading,
-                        gestureNavigationEnabled: true,
-                        navigationDelegate: (NavigationRequest request) async {
-                          print(request.url);
-                          setState(() {
-                            isPdfOpen = false;
-                          });
-                          if (request.url.contains("whatsapp.com") ||
-                              request.url.contains("tel:") ||
-                              request.url.contains("mailto:") ||
-                              request.url.contains("geo:") ||
-                              request.url.contains("join") ||
-                              request.url.contains("play.google.com") ||
-                              request.url.contains("www.facebook.com") ||
-                              request.url.contains("www.instagram.com") ||
-                              request.url.contains("linkedin.com") ||
-                              request.url.contains("m.youtube.com") ||
-                              request.url.contains("facebook.com") ||
-                              request.url.contains("mobile.twitter.com/")) {
-                            String url = request.url;
-                            print(request.url);
-                            _launch(url);
-                            controller.loadUrl(baseUrl);
-                            return NavigationDecision.prevent;
-                          } else if (request.url.contains(".pdf")) {
-                            var path = await getFileFromUrl(request.url);
-                            if (path != null && !isPdfOpen) {
-                              print('naviagte');
 
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PdfViewPage(
-                                            path: path,
-                                          ))).then((value) => setState(() {
-                                    isPdfOpen = true;
-                                  }));
+                        onDownloadStartRequest: (controller, url) async {
+                          print("onDownloadStart $url");
+
+                          // final status = await Permission.storage.request();
+                          //
+                          // if(status.isGranted) {
+                          //   requestDownload(url.url.toString(),url.suggestedFilename!);
+                          // }
+                          // else {
+                          //   print('permission denied');
+                          // }
+
+                          // final taskId = await FlutterDownloader.enqueue(
+                          //   url: url.url.toString(),
+                          //   savedDir: (await getExternalStorageDirectory())!.path,
+                          //   showNotification: true, // show download progress in status bar (for Android)
+                          //   openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+                          // );
+
+                          _launch(url.url.toString());
+                        },
+                        pullToRefreshController: pullToRefreshController,
+                        onLoadStart: (controller, url) {
+
+                          setState(() {
+                            this.url = url.toString();
+                            urlController.text = this.url;
+                            isLoading = true;
+                          });
+                        },
+                        androidOnPermissionRequest:
+                            (controller, origin, resources) async {
+                          return PermissionRequestResponse(
+                              resources: resources,
+                              action: PermissionRequestResponseAction.GRANT);
+                        },
+                        shouldOverrideUrlLoading:
+                            (controller, navigationAction) async {
+                          var uri = navigationAction.request.url;
+
+                          if (![
+                            "http",
+                            "https",
+                            "file",
+                            "chrome",
+                            "data",
+                            "javascript",
+                            "about"
+                          ].contains(uri.scheme)) {
+                            if (await canLaunch(url)) {
+                              // Launch the App
+                              await launch(
+                                url,
+                              );
+                              // and cancel the request
+                              return NavigationActionPolicy.CANCEL;
                             }
-                            return NavigationDecision.prevent;
                           }
-                          return NavigationDecision.navigate;
+
+                          return NavigationActionPolicy.ALLOW;
+                        },
+                        onLoadStop: (controller, url) async {
+                          pullToRefreshController.endRefreshing();
+
+                          setState(() {
+                            this.url = url.toString();
+                            urlController.text = this.url;
+                            isLoading = false;
+                          });
+                        },
+                        onLoadError: (controller, url, code, message) {
+                          pullToRefreshController.endRefreshing();
                         },
                       ),
                     ),
